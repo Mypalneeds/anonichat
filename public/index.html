@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anonichat - Anonymous Chat Rooms</title>
+    <title>Anonichatbyblaise - Anonymous Chat Rooms</title>
     <style>
         * {
             margin: 0;
@@ -12,149 +12,242 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .main-container {
+            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            padding: 2rem 1rem;
         }
 
         .container {
             text-align: center;
-            padding: 2rem;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-            width: 90%;
+            padding: 3rem 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
         }
 
         h1 {
-            font-size: 3rem;
+            font-size: clamp(2rem, 5vw, 3.5rem);
             margin-bottom: 0.5rem;
-            background: linear-gradient(45deg, #ff9a9e, #fecfef, #fecfef);
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            letter-spacing: -0.02em;
         }
 
         .subtitle {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            margin-bottom: 3rem;
+            opacity: 0.8;
+            color: #e0e0e0;
+            font-weight: 300;
         }
 
         .create-room-btn {
-            background: linear-gradient(45deg, #ff6b6b, #ee5a6f);
+            background: linear-gradient(135deg, #667eea, #764ba2);
             border: none;
-            padding: 15px 30px;
+            padding: 16px 40px;
             font-size: 1.1rem;
             color: white;
             border-radius: 50px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             font-weight: 600;
             margin-bottom: 2rem;
-            min-width: 200px;
+            min-width: 220px;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .create-room-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .create-room-btn:hover::before {
+            left: 100%;
         }
 
         .create-room-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
         }
 
         .create-room-btn:active {
-            transform: translateY(0);
+            transform: translateY(-1px);
+        }
+
+        .create-room-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .room-link-container {
             display: none;
-            background: rgba(255, 255, 255, 0.15);
-            padding: 1.5rem;
-            border-radius: 15px;
-            margin-bottom: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 2rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .room-link-container.show {
             display: block;
-            animation: fadeIn 0.5s ease;
+            animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes slideUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px) scale(0.95); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+            }
+        }
+
+        .room-link-container h3 {
+            margin-bottom: 1.5rem;
+            color: #4CAF50;
+            font-weight: 600;
         }
 
         .link-input {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 1rem;
             text-align: center;
-            background: rgba(255, 255, 255, 0.9);
-            color: #333;
-            margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        .link-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .copy-btn, .join-btn {
+            border: none;
+            padding: 12px 24px;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            min-width: 120px;
         }
 
         .copy-btn {
-            background: #4CAF50;
-            border: none;
-            padding: 10px 20px;
-            color: white;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background 0.3s ease;
-            margin-right: 10px;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
         }
 
         .copy-btn:hover {
-            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
         }
 
         .join-btn {
-            background: #2196F3;
-            border: none;
-            padding: 10px 20px;
-            color: white;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background 0.3s ease;
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
         }
 
         .join-btn:hover {
-            background: #1976D2;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
         }
 
         .features {
-            text-align: left;
-            margin-top: 2rem;
+            margin-top: 3rem;
             padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .features h3 {
-            margin-bottom: 1rem;
-            text-align: center;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            color: #f0f0f0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            text-align: left;
         }
 
         .feature-item {
             display: flex;
             align-items: center;
-            margin-bottom: 0.8rem;
-            opacity: 0.9;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .feature-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
         }
 
         .feature-icon {
-            margin-right: 10px;
-            font-size: 1.2rem;
+            margin-right: 12px;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .feature-text {
+            opacity: 0.9;
+            font-weight: 400;
         }
 
         .loading {
@@ -166,63 +259,194 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            background: #4CAF50;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
             color: white;
-            padding: 15px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
             transform: translateX(400px);
-            transition: transform 0.3s ease;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+            z-index: 1000;
         }
 
         .notification.show {
             transform: translateX(0);
         }
+
+        .footer {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 2rem 1rem;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .footer-section p, .footer-section a {
+            color: #b0b0b0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .footer-section a:hover {
+            color: #667eea;
+        }
+
+        .developer-info {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.8;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem;
+            }
+
+            .container {
+                padding: 2rem 1.5rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .copy-btn, .join-btn {
+                width: 100%;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .notification {
+                right: 10px;
+                left: 10px;
+                transform: translateY(-100px);
+            }
+
+            .notification.show {
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem 1rem;
+                margin: 0.5rem;
+            }
+        }
+
+        /* Dark mode enhancements */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 50%, #16213e 100%);
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🔒 Anonichat</h1>
-        <p class="subtitle">Create anonymous chat rooms instantly. No registration required.</p>
-        
-        <button class="create-room-btn" onclick="createRoom()">
-            <span class="btn-text">Create Chat Room</span>
-            <span class="loading">Creating...</span>
-        </button>
-        
-        <div class="room-link-container" id="roomLinkContainer">
-            <h3>🎉 Your chat room is ready!</h3>
-            <input type="text" class="link-input" id="roomLink" readonly>
-            <div>
-                <button class="copy-btn" onclick="copyLink()">Copy Link</button>
-                <button class="join-btn" onclick="joinRoom()">Join Room</button>
+    <div class="main-container">
+        <div class="container">
+            <h1>🔒 Anonichatbyblaise</h1>
+            <p class="subtitle">Create anonymous chat rooms instantly. No registration required.</p>
+            
+            <button class="create-room-btn" onclick="createRoom()">
+                <span class="btn-text">Create Chat Room</span>
+                <span class="loading">Creating...</span>
+            </button>
+            
+            <div class="room-link-container" id="roomLinkContainer">
+                <h3>🎉 Your chat room is ready!</h3>
+                <input type="text" class="link-input" id="roomLink" readonly>
+                <div class="button-group">
+                    <button class="copy-btn" onclick="copyLink()">Copy Link</button>
+                    <button class="join-btn" onclick="joinRoom()">Join Room</button>
+                </div>
             </div>
-        </div>
 
-        <div class="features">
-            <h3>✨ Features</h3>
-            <div class="feature-item">
-                <span class="feature-icon">💬</span>
-                <span>Real-time messaging</span>
-            </div>
-            <div class="feature-item">
-                <span class="feature-icon">📁</span>
-                <span>File sharing (up to 10MB)</span>
-            </div>
-            <div class="feature-item">
-                <span class="feature-icon">🔐</span>
-                <span>Completely anonymous</span>
-            </div>
-            <div class="feature-item">
-                <span class="feature-icon">⏰</span>
-                <span>Room closes when everyone leaves</span>
-            </div>
-            <div class="feature-item">
-                <span class="feature-icon">👥</span>
-                <span>Maximum 2 people per room</span>
+            <div class="features">
+                <h3>✨ Features</h3>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <span class="feature-icon">💬</span>
+                        <span class="feature-text">Real-time messaging</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">📁</span>
+                        <span class="feature-text">File sharing (up to 10MB)</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🔐</span>
+                        <span class="feature-text">Completely anonymous</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">⏰</span>
+                        <span class="feature-text">Room closes when everyone leaves</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">👥</span>
+                        <span class="feature-text">Maximum 2 people per room</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🚀</span>
+                        <span class="feature-text">Lightning fast & secure</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Support</h4>
+                <a href="mailto:officialmblaise@gmail.com">Email Support</a>
+                <a href="tel:+2347066459689">Call: 070-6645-9689</a>
+                <p>We're here to help 24/7</p>
+            </div>
+            <div class="footer-section">
+                <h4>About</h4>
+                <p>Secure, anonymous chat rooms</p>
+                <p>Built for privacy & simplicity</p>
+                <p>No data collection</p>
+            </div>
+            <div class="footer-section">
+                <h4>Connect</h4>
+                <a href="mailto:officialmblaise@gmail.com">officialmblaise@gmail.com</a>
+                <p>Nigeria</p>
+                <p>Version 1.0</p>
+            </div>
+        </div>
+        <div class="developer-info">
+            <p>Designed and developed by <strong>Micheal Blaise</strong></p>
+            <p>© 2025 Anonichatbyblaise. All rights reserved.</p>
+        </div>
+    </footer>
 
     <div class="notification" id="notification">
         Link copied to clipboard!
